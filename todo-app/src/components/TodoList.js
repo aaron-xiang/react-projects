@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Todo from './Todo';
+import AppContext from '../context/AppContext';
 
 /**
  * props: {
@@ -8,18 +9,28 @@ import Todo from './Todo';
  * }
  */
 class TodoList extends Component {
-  deleteTodo = (name) => {
-    const { deleteTodo } = this.props
-    console.log('delete todolist', name, deleteTodo)
-    deleteTodo(name);
-  }
+  static contextType = AppContext;
+  // deleteTodo = (name) => {
+  //   const { deleteTodo } = this.props
+  //   console.log('delete todolist', name, deleteTodo)
+  //   deleteTodo(name);
+  // }
+
+  // toggleTodo = (name) => {
+  //   const { toggleTodo } = this.props;
+  //   toggleTodo(name);  
+  // }
 
   render() {
-    const { todos } = this.props;
-    console.log('todolist', todos)
+    const { todos, filter } = this.context;
+    // { completed : true/false}
+    // console.log('todolist', todos)
     // const listItems = [];
     // todos.forEach(todo => listItems.push(<Todo todo={todo} />));
-    const listItems = todos.map(todo => <Todo key={todo.name} todo={todo} onDelete={this.deleteTodo} />);
+    console.log(filter);
+    const filteredTodos = filter ? todos.filter(todo => todo.completed === filter.completed) : todos;
+    console.log(filteredTodos);
+    const listItems = filteredTodos.map(todo => <Todo key={todo.name} todo={todo} onDelete={this.deleteTodo} onToggle={this.toggleTodo} />);
     return (
       <ul className="todo-list">
       {
